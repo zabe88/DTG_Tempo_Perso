@@ -90,8 +90,8 @@ header{background:rgba(13,17,23,.88);backdrop-filter:blur(24px);-webkit-backdrop
 document.getElementById('headerIcon').src = document.querySelector('link[rel=apple-touch-icon]').href;
 
 var S={mode:"dtg",tt:"light_std",ft:"film_std",qi:"quality",iD:0,
-cat:[{id:"wh",name:"BS050 Bianca",color:"White",sizes:"XS-XXL",src:"Actionwear",p:{"1+":2.45,"10+":2.35,"50+":2.18,"500+":2.13}},{id:"wh3",name:"BS050 Bianca 3XL",color:"White",sizes:"3XL",src:"Actionwear",p:{"1+":2.96,"10+":2.86,"50+":2.76,"500+":2.66}},{id:"to",name:"BS050 Toffee",color:"Toffee",sizes:"S-XXL",src:"Actionwear",p:{"1+":2.85,"10+":2.75,"50+":2.58,"500+":2.49}}],
-sC:0,sT:"10+",custN:"",custP:"",useCust:false,
+cat:[{id:"wh",name:"BS050 Bianca",color:"White",sizes:"XS-XXL",src:"Actionwear",type:"tshirt",gen:"unisex",disc:0,discType:"%",p:{"1+":2.45,"10+":2.35,"50+":2.18,"500+":2.13}},{id:"wh3",name:"BS050 Bianca 3XL",color:"White",sizes:"3XL",src:"Actionwear",type:"tshirt",gen:"unisex",disc:0,discType:"%",p:{"1+":2.96,"10+":2.86,"50+":2.76,"500+":2.66}},{id:"to",name:"BS050 Toffee",color:"Toffee",sizes:"S-XXL",src:"Actionwear",type:"tshirt",gen:"unisex",disc:0,discType:"%",p:{"1+":2.85,"10+":2.75,"50+":2.58,"500+":2.49}}],
+sC:0,sT:"10+",custN:"",custP:"",useCust:false,catEdit:null,catAdd:false,
 frPw:35,frPh:40,frAn:null,frUrl:null,frFn:"",
 bkEn:false,bkPw:35,bkPh:40,bkAn:null,bkUrl:null,bkFn:"",
 inks:[{id:"cyan",n:"Ciano",ml:800,pr:244,c:"#34AADC"},{id:"magenta",n:"Magenta",ml:800,pr:244,c:"#E8548F"},{id:"yellow",n:"Giallo",ml:800,pr:244,c:"#F5A623"},{id:"black",n:"Nero",ml:800,pr:244,c:"#636366"},{id:"white",n:"Bianco",ml:800,pr:244,c:"#C7C7CC"}],
@@ -103,6 +103,44 @@ var FT=[{id:"film_std",n:"Film Standard",uW:1,uC:1,gB:0,i:"📄",d:"CMYK+W"},{id
 var QL=[{id:"speed",n:"Velocità",s:"600×300",f:.45},{id:"standard",n:"Standard",s:"600×600",f:.75},{id:"quality",n:"Qualità",s:"1200×1200",f:1.0},{id:"max",n:"Massima",s:"1200×1200+",f:1.35}];
 var PL=[{n:"Grande",s:"40×50",w:40.6,h:50.8},{n:"Media",s:"35×40",w:35.6,h:40.6},{n:"Piccola",s:"25×30",w:25.4,h:30.5},{n:"Manica",s:"10×10",w:10.1,h:10.1}];
 var TIERS=["1+","10+","50+","500+"];
+var GTYPES=[
+{id:"tshirt",n:"T-Shirt"},
+{id:"polo",n:"Polo"},
+{id:"longsleeve",n:"Manica lunga"},
+{id:"hoodie",n:"Felpa/Hoodie"},
+{id:"tank",n:"Canotta"},
+{id:"cap",n:"Cappello"},
+{id:"skirt",n:"Gonna"},
+{id:"pants",n:"Pantaloni"},
+{id:"bag",n:"Borsa/Shopper"},
+{id:"baby",n:"Body bebè"},
+{id:"apron",n:"Grembiule"}
+];
+var GENDERS=[{id:"unisex",n:"Unisex"},{id:"man",n:"Uomo"},{id:"woman",n:"Donna"},{id:"child",n:"Bambino"}];
+
+function gIco(type,sz){
+var s=sz||24,h='<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">';
+if(type==="tshirt")h+='<path d="M8 2L3 6v2h4v12h10V8h4V6l-5-4h-3a2 2 0 01-4 0H8z"/>';
+else if(type==="polo")h+='<path d="M8 2L3 6v2h4v12h10V8h4V6l-5-4h-3a2 2 0 01-4 0H8z"/><path d="M10 2v3h4V2"/>';
+else if(type==="longsleeve")h+='<path d="M8 2L2 8l2 1 2-2v13h12V7l2 2 2-1L16 2h-3a2 2 0 01-4 0H8z"/>';
+else if(type==="hoodie")h+='<path d="M8 2L3 6v2h4v12h10V8h4V6l-5-4h-3a2 2 0 01-4 0H8z"/><path d="M9 2c0 2 1 4 3 4s3-2 3-4"/><path d="M8 14h8"/>';
+else if(type==="tank")h+='<path d="M9 2H8v1L7 8v12h10V8l-1-5V2h-1"/><path d="M9 2a3 3 0 006 0"/>';
+else if(type==="cap")h+='<path d="M4 14c0-4 3.6-7 8-7s8 3 8 7"/><path d="M2 14h20"/><path d="M4 14c0 2 3.6 4 8 4s8-2 8-4"/><path d="M20 14l2 1"/>';
+else if(type==="skirt")h+='<path d="M8 4h8M7 4l-2 16h14L17 4"/><path d="M12 4v16"/>';
+else if(type==="pants")h+='<path d="M8 2h8l1 10-3 10h-1L12 14l-1 8H10L7 12z"/>';
+else if(type==="bag")h+='<rect x="4" y="8" width="16" height="14" rx="2"/><path d="M8 8V6a4 4 0 018 0v2"/>';
+else if(type==="baby")h+='<path d="M8 3L4 7v4h3v9h10v-9h3V7l-4-4h-2a3 3 0 01-6 0H8z"/><circle cx="10" cy="13" r=".5"/><circle cx="14" cy="13" r=".5"/>';
+else if(type==="apron")h+='<path d="M7 4h10v4a5 5 0 01-10 0V4z"/><path d="M7 8L4 10v10h16V10l-3-2"/><path d="M8 14h8v4H8z"/>';
+else h+='<rect x="4" y="4" width="16" height="16" rx="2"/>';
+h+='</svg>';return h;}
+
+function genIco(gen,sz){
+var s=sz||14,h='<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">';
+if(gen==="man")h+='<circle cx="10" cy="8" r="5"/><path d="M18 2l-4 4m4 0h-4v4"/>';
+else if(gen==="woman")h+='<circle cx="12" cy="8" r="5"/><path d="M12 13v6m-3-3h6"/>';
+else if(gen==="child")h+='<circle cx="12" cy="7" r="4"/><path d="M12 11v5m-2-2h4"/><path d="M8 4l1-2m7 2l-1-2"/>';
+else h+='<circle cx="12" cy="10" r="5"/><path d="M12 15v4"/>';
+h+='</svg>';return h;}
 
 function fmt(n){return(n||0).toLocaleString("it-IT",{style:"currency",currency:"EUR",minimumFractionDigits:2})}
 function fmt4(n){return(n||0).toLocaleString("it-IT",{style:"currency",currency:"EUR",minimumFractionDigits:4,maximumFractionDigits:4})}
@@ -119,7 +157,7 @@ function calcInk(an,wC,hC,qF,tT,iD){if(!an)return{c:0,m:0,y:0,k:0,w:0,t:0};var a
 
 function handleImg(file,side){if(!file||file.type.indexOf("image")<0)return;var url=URL.createObjectURL(file);var img=new Image();img.onload=function(){var cv=document.getElementById("cvs"),ctx=cv.getContext("2d",{willReadFrequently:true});var sc=Math.min(400/img.width,400/img.height,1);cv.width=Math.round(img.width*sc);cv.height=Math.round(img.height*sc);ctx.drawImage(img,0,0,cv.width,cv.height);var an=analyzeImg(ctx.getImageData(0,0,cv.width,cv.height).data,cv.width,cv.height);if(side==="fr"){S.frAn=an;S.frUrl=url;S.frFn=file.name}else{S.bkAn=an;S.bkUrl=url;S.bkFn=file.name}render()};img.src=url}
 
-function calc(){var aT=getType(),q=getQual();var gC=S.useCust?pn(S.custP):(S.cat[S.sC]?S.cat[S.sC].p[S.sT]||0:0);var fI=calcInk(S.frAn,S.frPw,S.frPh,q.f,aT,S.iD);var bI=S.bkEn?calcInk(S.bkAn,S.bkPw,S.bkPh,q.f,aT,S.iD):{c:0,m:0,y:0,k:0,w:0,t:0};var tI={c:fI.c+bI.c,m:fI.m+bI.m,y:fI.y+bI.y,k:fI.k+bI.k,w:fI.w+bI.w,t:fI.t+bI.t};var inkCost=0;S.inks.forEach(function(ink){var ml=tI[ink.id==="cyan"?"c":ink.id==="magenta"?"m":ink.id==="yellow"?"y":ink.id==="black"?"k":"w"];inkCost+=(ink.pr/ink.ml)*ml});var aCo=S.cons.filter(function(c){if(c.dtf&&S.mode!=="dtf")return false;if(c.dk&&!aT.uW)return false;return true});var consCost=0;aCo.forEach(function(c){consCost+=(c.pr/(c.qty||1))*c.per});if(S.bkEn&&S.mode==="dtf"){var sh=S.cons.find(function(c){return c.id==="dtf_sheet"});if(sh)consCost+=(sh.pr/(sh.qty||1))*sh.per}var rP=250/(S.mP||1);var tC=gC+inkCost+consCost+rP+S.el+S.pk;var pN=tC>0?tC/(1-S.mg/100):0;var pV=pN*(1+S.vt/100);var pr=pN-tC;return{gC:gC,inkCost:inkCost,consCost:consCost,rP:rP,tC:tC,pN:pN,pV:pV,pr:pr,tI:tI,aCo:aCo,aT:aT,q:q}}
+function calc(){var aT=getType(),q=getQual();var item=S.cat[S.sC];var rawP=S.useCust?pn(S.custP):(item?item.p[S.sT]||0:0);var gC=rawP;if(!S.useCust&&item&&item.disc>0){if(item.discType==="%")gC=rawP*(1-item.disc/100);else gC=Math.max(0,rawP-item.disc)}var fI=calcInk(S.frAn,S.frPw,S.frPh,q.f,aT,S.iD);var bI=S.bkEn?calcInk(S.bkAn,S.bkPw,S.bkPh,q.f,aT,S.iD):{c:0,m:0,y:0,k:0,w:0,t:0};var tI={c:fI.c+bI.c,m:fI.m+bI.m,y:fI.y+bI.y,k:fI.k+bI.k,w:fI.w+bI.w,t:fI.t+bI.t};var inkCost=0;S.inks.forEach(function(ink){var ml=tI[ink.id==="cyan"?"c":ink.id==="magenta"?"m":ink.id==="yellow"?"y":ink.id==="black"?"k":"w"];inkCost+=(ink.pr/ink.ml)*ml});var aCo=S.cons.filter(function(c){if(c.dtf&&S.mode!=="dtf")return false;if(c.dk&&!aT.uW)return false;return true});var consCost=0;aCo.forEach(function(c){consCost+=(c.pr/(c.qty||1))*c.per});if(S.bkEn&&S.mode==="dtf"){var sh=S.cons.find(function(c){return c.id==="dtf_sheet"});if(sh)consCost+=(sh.pr/(sh.qty||1))*sh.per}var rP=250/(S.mP||1);var tC=gC+inkCost+consCost+rP+S.el+S.pk;var pN=tC>0?tC/(1-S.mg/100):0;var pV=pN*(1+S.vt/100);var pr=pN-tC;return{gC:gC,inkCost:inkCost,consCost:consCost,rP:rP,tC:tC,pN:pN,pV:pV,pr:pr,tI:tI,aCo:aCo,aT:aT,q:q}}
 
 function render(){
   var r=calc();
@@ -166,12 +204,87 @@ function render(){
   }
 
   else if(S.tab==="catalog"){
-    h+='<h2>Catalogo capi</h2><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,.5)">'+S.cat.length+' articoli</span><button class="btn" onclick="addManualPrompt()" style="padding:10px 18px;font-size:14px">+ Aggiungi</button></div>';
+    h+='<h2>Catalogo capi</h2>';
+    // Tier selector
     h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"><span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.3);padding:9px 0">Fascia:</span>';
     TIERS.forEach(function(t){h+='<button class="tier'+(S.sT===t&&!S.useCust?' on':'')+'" onclick="S.sT=\''+t+'\';S.useCust=false;render()">'+t+'</button>'});h+='</div>';
-    S.cat.forEach(function(g,i){var on=S.sC===i&&!S.useCust;h+='<div class="ci'+(on?" on":"")+'" onclick="S.sC='+i+';S.useCust=false;render()"><div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+g.name+'</div><div style="font-size:12px;color:rgba(255,255,255,.3);margin-top:2px">'+(g.color||"")+" "+(g.sizes||"")+" · "+(g.src||"")+'</div></div><div style="font-family:SFMono-Regular,monospace;font-size:16px;font-weight:800;color:'+(on?'#A855F7':'rgba(255,255,255,.5)')+';flex-shrink:0">'+(g.p[S.sT]?fmt(g.p[S.sT]):"—")+'</div></div>'});
-    h+='<div class="card" style="margin-top:4px"><span style="font-size:11px;color:rgba(255,255,255,.3);display:block;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Prezzo manuale</span><div style="display:flex;gap:8px"><input style="flex:2" value="'+S.custN+'" onchange="S.custN=this.value;S.useCust=true;render()" placeholder="Nome"><input type="number" step="0.01" style="flex:1" value="'+(S.custP||"")+'" onchange="S.custP=this.value;S.useCust=true;render()" placeholder="€"></div></div>';
-    h+='<div style="padding:14px;border-radius:12px;background:rgba(108,92,231,.1);border:1px solid rgba(108,92,231,.2);font-size:14px;font-weight:600;color:#A855F7;margin-top:12px">→ '+gN+' — '+fmt(r.gC)+'</div>';
+
+    // List items
+    S.cat.forEach(function(g,i){
+      var on=S.sC===i&&!S.useCust;
+      var rawP=g.p[S.sT]||0;
+      var finalP=rawP;
+      if(g.disc>0){finalP=g.discType==="%"?rawP*(1-g.disc/100):Math.max(0,rawP-g.disc)}
+      var editing=S.catEdit===g.id;
+
+      if(editing){
+        // EDIT MODE
+        h+='<div class="card" style="margin-bottom:8px;border:1px solid rgba(108,92,231,.4)">';
+        h+='<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Modifica articolo</div>';
+        h+='<div style="margin-bottom:8px"><label class="lb">Nome</label><input value="'+g.name+'" onchange="catUpd('+i+',\'name\',this.value)"></div>';
+        h+='<div style="display:flex;gap:8px;margin-bottom:8px"><div style="flex:1"><label class="lb">Colore</label><input value="'+(g.color||'')+'" onchange="catUpd('+i+',\'color\',this.value)"></div><div style="flex:1"><label class="lb">Taglie</label><input value="'+(g.sizes||'')+'" onchange="catUpd('+i+',\'sizes\',this.value)"></div></div>';
+        // Type selector with icons
+        h+='<label class="lb">Tipo capo</label><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px">';
+        GTYPES.forEach(function(gt){var sel=g.type===gt.id;h+='<button style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:8px;border:1px solid '+(sel?'rgba(108,92,231,.5)':'rgba(255,255,255,.08)')+';background:'+(sel?'rgba(108,92,231,.15)':'rgba(255,255,255,.03)')+';color:'+(sel?'#A855F7':'rgba(255,255,255,.4)')+';font-size:11px;font-weight:600;cursor:pointer;font-family:inherit" onclick="catUpd('+i+',\'type\',\''+gt.id+'\')">'+gIco(gt.id,16)+gt.n+'</button>'});
+        h+='</div>';
+        // Gender
+        h+='<label class="lb">Destinatario</label><div style="display:flex;gap:5px;margin-bottom:8px">';
+        GENDERS.forEach(function(gn){var sel=g.gen===gn.id;h+='<button style="display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;border:1px solid '+(sel?'rgba(108,92,231,.5)':'rgba(255,255,255,.08)')+';background:'+(sel?'rgba(108,92,231,.15)':'rgba(255,255,255,.03)')+';color:'+(sel?'#A855F7':'rgba(255,255,255,.4)')+';font-size:12px;font-weight:600;cursor:pointer;font-family:inherit" onclick="catUpd('+i+',\'gen\',\''+gn.id+'\')">'+genIco(gn.id,14)+' '+gn.n+'</button>'});
+        h+='</div>';
+        // Prices
+        h+='<label class="lb">Prezzi per fascia</label><div class="g2" style="margin-bottom:8px">';
+        TIERS.forEach(function(t){h+='<div><label class="lb" style="font-size:10px">€ '+t+'</label><input type="number" step="0.01" value="'+(g.p[t]||'')+'" onchange="catUpdP('+i+',\''+t+'\',this.value)"></div>'});
+        h+='</div>';
+        // Discount
+        h+='<label class="lb">Sconto del momento</label><div style="display:flex;gap:8px;margin-bottom:10px"><input type="number" step="0.5" style="flex:1" value="'+(g.disc||0)+'" onchange="catUpd('+i+',\'disc\',parseFloat(this.value)||0)" placeholder="0"><div style="display:flex;gap:4px">';
+        ["%","€"].forEach(function(dt){var sel=g.discType===dt;h+='<button style="padding:8px 14px;border-radius:8px;border:1px solid '+(sel?'rgba(52,211,153,.5)':'rgba(255,255,255,.08)')+';background:'+(sel?'rgba(52,211,153,.12)':'rgba(255,255,255,.03)')+';color:'+(sel?'#34D399':'rgba(255,255,255,.4)')+';font-size:14px;font-weight:700;cursor:pointer;font-family:inherit" onclick="catUpd('+i+',\'discType\',\''+dt+'\')">'+dt+'</button>'});
+        h+='</div></div>';
+        // Fornitore
+        h+='<div style="margin-bottom:10px"><label class="lb">Fornitore</label><input value="'+(g.src||'')+'" onchange="catUpd('+i+',\'src\',this.value)"></div>';
+        // Actions
+        h+='<div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="S.catEdit=null;render()">Fatto</button><button style="flex:0;padding:12px 16px;border-radius:10px;border:1px solid rgba(255,100,100,.3);background:rgba(255,100,100,.08);color:#FF6B6B;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;min-height:44px" onclick="catDel('+i+')">Elimina</button></div>';
+        h+='</div>';
+      } else {
+        // VIEW MODE
+        h+='<div class="ci'+(on?" on":"")+'" onclick="S.sC='+i+';S.useCust=false;render()">';
+        h+='<div style="color:'+(on?'#A855F7':'rgba(255,255,255,.25)')+';flex-shrink:0">'+gIco(g.type||"tshirt",28)+'</div>';
+        h+='<div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:14px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+g.name+'</span>'+genIco(g.gen||"unisex",12)+'</div>';
+        h+='<div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:2px">'+(g.color||"")+" "+(g.sizes||"")+(g.src?" · "+g.src:"")+'</div>';
+        if(g.disc>0){h+='<div style="display:inline-block;margin-top:3px;padding:2px 8px;border-radius:6px;background:rgba(52,211,153,.12);color:#34D399;font-size:10px;font-weight:700">-'+g.disc+g.discType+' SCONTO</div>'}
+        h+='</div>';
+        h+='<div style="text-align:right;flex-shrink:0">';
+        if(g.disc>0)h+='<div style="font-size:10px;color:rgba(255,255,255,.2);text-decoration:line-through">'+fmt(rawP)+'</div>';
+        h+='<div style="font-family:SFMono-Regular,monospace;font-size:15px;font-weight:800;color:'+(on?'#A855F7':'rgba(255,255,255,.5)')+'">'+fmt(finalP)+'</div></div>';
+        h+='<button style="padding:6px;border:none;background:transparent;color:rgba(255,255,255,.2);cursor:pointer;font-size:16px" onclick="event.stopPropagation();S.catEdit=\''+g.id+'\';render()">✎</button>';
+        h+='</div>';
+      }
+    });
+
+    // Add button / form
+    if(S.catAdd){
+      h+='<div class="card" style="border:1px solid rgba(108,92,231,.3);margin-top:8px">';
+      h+='<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Nuovo articolo</div>';
+      h+='<div style="margin-bottom:8px"><label class="lb">Nome *</label><input id="newName" placeholder="Es. BS050 Heavy Cotton"></div>';
+      h+='<div style="display:flex;gap:8px;margin-bottom:8px"><div style="flex:1"><label class="lb">Colore</label><input id="newColor" placeholder="Bianco"></div><div style="flex:1"><label class="lb">Taglie</label><input id="newSizes" placeholder="S-XXL"></div></div>';
+      h+='<label class="lb">Tipo capo</label><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px" id="newTypeWrap">';
+      GTYPES.forEach(function(gt,ti){h+='<button style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:8px;border:1px solid '+(ti===0?'rgba(108,92,231,.5)':'rgba(255,255,255,.08)')+';background:'+(ti===0?'rgba(108,92,231,.15)':'rgba(255,255,255,.03)')+';color:'+(ti===0?'#A855F7':'rgba(255,255,255,.4)')+';font-size:11px;font-weight:600;cursor:pointer;font-family:inherit" data-type="'+gt.id+'" onclick="selNewType(this,\''+gt.id+'\')">'+gIco(gt.id,16)+gt.n+'</button>'});
+      h+='</div>';
+      h+='<label class="lb">Destinatario</label><div style="display:flex;gap:5px;margin-bottom:8px" id="newGenWrap">';
+      GENDERS.forEach(function(gn,gi){h+='<button style="display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;border:1px solid '+(gi===0?'rgba(108,92,231,.5)':'rgba(255,255,255,.08)')+';background:'+(gi===0?'rgba(108,92,231,.15)':'rgba(255,255,255,.03)')+';color:'+(gi===0?'#A855F7':'rgba(255,255,255,.4)')+';font-size:12px;font-weight:600;cursor:pointer;font-family:inherit" data-gen="'+gn.id+'" onclick="selNewGen(this,\''+gn.id+'\')">'+genIco(gn.id,14)+' '+gn.n+'</button>'});
+      h+='</div>';
+      h+='<label class="lb">Prezzi per fascia</label><div class="g2" style="margin-bottom:8px">';
+      TIERS.forEach(function(t){h+='<div><label class="lb" style="font-size:10px">€ '+t+'</label><input type="number" step="0.01" id="newP'+t.replace("+","")+'" placeholder="0,00"></div>'});
+      h+='</div>';
+      h+='<div style="margin-bottom:10px"><label class="lb">Fornitore</label><input id="newSrc" placeholder="Actionwear"></div>';
+      h+='<div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="catAddSave()">Aggiungi</button><button style="flex:0;padding:12px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.4);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;min-height:44px" onclick="S.catAdd=false;render()">Annulla</button></div>';
+      h+='</div>';
+    } else {
+      h+='<div style="display:flex;gap:8px;margin-top:8px"><button class="btn" style="flex:1" onclick="S.catAdd=true;render()">+ Nuovo articolo</button></div>';
+    }
+
+    // Manual price
+    h+='<div class="card" style="margin-top:10px"><span style="font-size:11px;color:rgba(255,255,255,.3);display:block;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">Prezzo manuale</span><div style="display:flex;gap:8px"><input style="flex:2" value="'+S.custN+'" onchange="S.custN=this.value;S.useCust=true;render()" placeholder="Nome"><input type="number" step="0.01" style="flex:1" value="'+(S.custP||"")+'" onchange="S.custP=this.value;S.useCust=true;render()" placeholder="€"></div></div>';
+    h+='<div style="padding:14px;border-radius:12px;background:rgba(108,92,231,.1);border:1px solid rgba(108,92,231,.2);font-size:14px;font-weight:600;color:#A855F7;margin-top:10px">→ '+gN+' — '+fmt(r.gC)+'</div>';
   }
 
   else if(S.tab==="costs"){
@@ -221,7 +334,22 @@ function setType(id){if(S.mode==="dtg")S.tt=id;else S.ft=id;render()}
 function setQual(id){S.qi=id;render()}
 function updInk(id,v){S.inks.forEach(function(i){if(i.id===id)i.pr=parseFloat(v)||0});render()}
 function updCon(id,f,v){S.cons.forEach(function(c){if(c.id===id)c[f]=parseFloat(v)||0});render()}
-function addManualPrompt(){var name=prompt("Nome del capo:");if(!name)return;var color=prompt("Colore:")||"";var p1=pn(prompt("Prezzo 1+:")||"0");var p10=pn(prompt("Prezzo 10+:")||"0")||p1;var p50=pn(prompt("Prezzo 50+:")||"0")||p10;var p500=pn(prompt("Prezzo 500+:")||"0")||p50;S.cat.push({id:uid(),name:name,color:color,sizes:"",src:"Manuale",p:{"1+":p1,"10+":p10,"50+":p50,"500+":p500}});render()}
+function catUpd(i,f,v){S.cat[i][f]=v;render()}
+function catUpdP(i,t,v){S.cat[i].p[t]=pn(v);render()}
+function catDel(i){S.cat.splice(i,1);if(S.sC>=S.cat.length)S.sC=Math.max(0,S.cat.length-1);S.catEdit=null;render()}
+var _newType="tshirt",_newGen="unisex";
+function selNewType(el,t){_newType=t;var btns=el.parentNode.querySelectorAll("button");btns.forEach(function(b){var on=b.getAttribute("data-type")===t;b.style.borderColor=on?"rgba(108,92,231,.5)":"rgba(255,255,255,.08)";b.style.background=on?"rgba(108,92,231,.15)":"rgba(255,255,255,.03)";b.style.color=on?"#A855F7":"rgba(255,255,255,.4)"})}
+function selNewGen(el,g){_newGen=g;var btns=el.parentNode.querySelectorAll("button");btns.forEach(function(b){var on=b.getAttribute("data-gen")===g;b.style.borderColor=on?"rgba(108,92,231,.5)":"rgba(255,255,255,.08)";b.style.background=on?"rgba(108,92,231,.15)":"rgba(255,255,255,.03)";b.style.color=on?"#A855F7":"rgba(255,255,255,.4)"})}
+function catAddSave(){
+  var name=document.getElementById("newName").value.trim();
+  if(!name){alert("Inserisci il nome");return}
+  var p1=pn(document.getElementById("newP1").value);
+  var p10=pn(document.getElementById("newP10").value)||p1;
+  var p50=pn(document.getElementById("newP50").value)||p10;
+  var p500=pn(document.getElementById("newP500").value)||p50;
+  S.cat.push({id:uid(),name:name,color:document.getElementById("newColor").value.trim(),sizes:document.getElementById("newSizes").value.trim(),src:document.getElementById("newSrc").value.trim()||"Manuale",type:_newType,gen:_newGen,disc:0,discType:"%",p:{"1+":p1,"10+":p10,"50+":p50,"500+":p500}});
+  S.catAdd=false;_newType="tshirt";_newGen="unisex";render();
+}
 
 render();
 </script>
